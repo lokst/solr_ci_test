@@ -32,7 +32,7 @@ jobs:
           name: Test Solr
           command: |
             set -x
-            sleep 10
+            sleep 3
             data=$(docker exec -it --user=solr $SOLR_CONTAINER_NAME wget -q -O - "http://localhost:$SOLR_PORT/solr/$CORE_NAME/select?q=id%3Adell")
             echo $data
             if ! egrep -q 'Texas' <<<$data; then
