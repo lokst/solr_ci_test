@@ -16,7 +16,7 @@ jobs:
             DOCKERIZE_VERSION: v0.3.0
       - run:
           name: Wait for Solr
-          command: dockerize -wait tcp://localhost:8983 -timeout 1m
+          command: dockerize -wait http://localhost:8983 -timeout 1m
       - run:
           name: Load test data into Solr
           command: |
