@@ -2,6 +2,10 @@ version: 2
 jobs:
   build:
     machine: true
+    environment:
+      CORE_NAME: mycore
+      SOLR_CONTAINER_NAME: solr_container
+      SOLR_PORT: 8983
     steps:
       - checkout
       - run:
@@ -16,20 +20,20 @@ jobs:
             DOCKERIZE_VERSION: v0.3.0
       - run:
           name: Wait for Solr
-          command: dockerize -wait http://localhost:8983 -timeout 1m
+          command: dockerize -wait http://localhost:$SOLR_PORT -timeout 1m
       - run:
           name: Load test data into Solr
           command: |
             set -x
             # Wait for Solr core to load
             sleep 60
-            docker exec -it --user=solr solr_container bin/post -c mycore example/exampledocs/manufacturers.xml
+            docker exec -it --user=solr $SOLR_CONTAINER_NAME bin/post -c $CORE_NAME example/exampledocs/manufacturers.xml
       - run:
           name: Test Solr
           command: |
             set -x
             sleep 10
-            data=$(docker exec -it --user=solr solr_container wget -q -0 - 'http://localhost:8983/solr/mycore/select?q=id%3Adell')
+            data=$(docker exec -it --user=solr $SOLR_CONTAINER_NAME wget -q -0 - 'http://localhost:$SOLR_PORT/solr/$CORE_NAME/select?q=id%3Adell')
             echo $data
             if ! egrep -q 'Texas' <<<$data; then
               echo "An error occurred; data did not load"
