@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Create Solr container with a core named "mycore"
+          command: |
+            set -x
+            docker-compose up -d
+      - run:
+          name: Load test data into Solr
+          command: |
+            set -x
+            docker exec -it --user=solr my_solr bin/post -c mycore example/exampledocs/manufacturers.xml
