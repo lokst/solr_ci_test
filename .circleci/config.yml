@@ -13,4 +13,4 @@ jobs:
           name: Load test data into Solr
           command: |
             set -x
-            docker exec -it --user=solr solr bin/post -c mycore example/exampledocs/manufacturers.xml
+            docker exec -it --user=solr solr_container bin/post -c mycore example/exampledocs/manufacturers.xml
